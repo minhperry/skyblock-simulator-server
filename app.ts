@@ -36,7 +36,7 @@ export function app(): express.Express {
   })
 
   // Add this in server.ts too
-  server.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+  server.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
   return server
 }
