@@ -8,3 +8,4 @@ Server code for [Skyblock Simulator](https://github.com/minhperry/skyblock-simul
 - [Zod](https://zod.dev/) - TypeScript-first schema declaration and validation library
 - [NodeCache](https://www.npmjs.com/package/node-cache) - Simple in-memory caching for Node.js
 - [LowDB](https://github.com/typicode/lowdb) - Small local JSON database
+- [Swagger](https://swagger.io/) - API documentation
