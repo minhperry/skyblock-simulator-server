@@ -14,7 +14,7 @@ $router.use('/player', $playerRouter)
 $router.use('/profiles', $profilesRouter)
 $router.use('/profile', $singleProfileRouter)
 
-$router.all('*', (req: Req, res: Res) => {
+$router.all('/*any', (req: Req, res: Res) => {
   res.status(404).json({
     error: `Route ${req.path} not found`,
   })
