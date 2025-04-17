@@ -110,7 +110,7 @@ class Cache {
    */
   rememberFailure(key: string, error: Error, ttl = 5 * MINUTE): void {
     this.cache.set(`failed-${key}`, error, ttl);
-    this.logger.warn(`Cached failure for ${key} with TTL ${ttl}s`);
+    this.logger.warn(`Cached failure for failed-${key} with TTL ${ttl}s`);
   }
 }
 
