@@ -1,4 +1,4 @@
-import {Res, Req} from '../../utils/types';
+import {Res, Req, ErrorCode} from '../../utils/types';
 import express from 'express';
 import {getPlayerByName} from './player.service';
 import {
@@ -121,7 +121,7 @@ $playerRouter.get('/name/:name', async (req: Req, res: Res) => {
   if (!validation.success) {
     res.status(400).json({
       error: 'Invalid player name format',
-      code: 'MALFORMED_PLAYER_NAME',
+      code: ErrorCode.MALFORMED_PLAYER_NAME,
       message: joinZodError(validation.error)
     })
     return;
@@ -134,13 +134,13 @@ $playerRouter.get('/name/:name', async (req: Req, res: Res) => {
     if (e instanceof ZodValidationError) {
       res.status(404).json({
         error: 'Mojang API returned an error',
-        code: 'MOJANG_API_ERROR',
+        code: ErrorCode.MOJANG_API_ERROR,
         message: e.message
       })
     } else if (e instanceof MojangNotFoundError) {
       res.status(404).json({
         error: 'Player not found!',
-        code: 'PLAYER_NOT_FOUND',
+        code: ErrorCode.PLAYER_NOT_FOUND,
         message: e.message
       })
     }
@@ -247,7 +247,7 @@ $playerRouter.get('/uuid/:uuid', async (req: Req, res: Res) => {
   if (!validation.success) {
     res.status(400).json({
       error: 'Invalid Player UUID format',
-      code: 'INVALID_UUID_FORMAT',
+      code: ErrorCode.MALFORMED_UUID,
       message: joinZodError(validation.error)
     })
     return;
@@ -260,13 +260,13 @@ $playerRouter.get('/uuid/:uuid', async (req: Req, res: Res) => {
     if (e instanceof ItemNotFoundError) {
       res.status(404).json({
         error: 'UUID not found in the database',
-        code: 'UUID_NOT_FOUND',
+        code: ErrorCode.UUID_NOT_FOUND,
         message: e.message
       })
     } else {
       res.status(500).json({
         error: 'Unknown internal error!',
-        code: 'UNKNOWN_ERROR',
+        code: ErrorCode.INTERNAL_ERROR,
         message: (e as Error).message
       })
     }

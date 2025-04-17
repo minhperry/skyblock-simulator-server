@@ -1,5 +1,5 @@
 import express from 'express';
-import {Req, Res} from '../../utils/types';
+import {ErrorCode, Req, Res} from '../../utils/types';
 import {getPlayerByName} from '../player/player.service';
 import {getPlayerDataInProfile} from './profile.service';
 import {HypixelApiError} from '../../utils/error';
@@ -181,21 +181,21 @@ $singleProfileRouter.get('/hotm/:name/:profileId', async (req: Req, res: Res) =>
       case 'NonexistentProfileError':
         res.status(404).json({
           error: 'Profile does not exist on Hypixel',
-          code: 'PROFILE_NOT_FOUND',
+          code: ErrorCode.PROFILE_NOT_FOUND,
           message: err.message
         })
         break;
       case 'PlayerNotInProfileError':
         res.status(404).json({
           error: 'Player is not in profile',
-          code: 'PLAYER_NOT_IN_PROFILE',
+          code: ErrorCode.PLAYER_NOT_IN_PROFILE,
           message: err.message
         })
         break;
       case 'HypixelApiError':
         res.status(503).json({
           error: 'Failed to fetch data from Hypixel API',
-          code: 'HYPIXEL_API_ERROR',
+          code: ErrorCode.HYPIXEL_API_ERROR,
           message: {
             hypixelStatus: (err as HypixelApiError).responseCode,
             hypixelMessage: (err as HypixelApiError).responseCause
@@ -205,21 +205,21 @@ $singleProfileRouter.get('/hotm/:name/:profileId', async (req: Req, res: Res) =>
       case 'ZodValidationError':
         res.status(422).json({
           error: 'Player name is invalid',
-          code: 'INVALID_PLAYER_NAME',
+          code: ErrorCode.MALFORMED_PLAYER_NAME,
           message: err.message
         })
         break;
       case 'MojangNotFoundError':
         res.status(404).json({
           error: 'Player not found in Mojang API',
-          code: 'MOJANG_PLAYER_NOT_FOUND',
+          code: ErrorCode.MOJANG_PLAYER_NOT_FOUND,
           message: err.message
         })
         break;
       default:
         res.status(500).json({
           error: 'Internal error',
-          code: 'UNKNOWN_ERROR',
+          code: ErrorCode.INTERNAL_ERROR,
           message: err.message
         })
         break;

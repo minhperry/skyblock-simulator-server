@@ -1,5 +1,5 @@
 import express from 'express';
-import {Req, Res} from '../../utils/types';
+import {ErrorCode, Req, Res} from '../../utils/types';
 import {getProfileList} from './profiles.service';
 import {DatabaseReadError, HypixelApiError, MojangNotFoundError, ZodValidationError} from '../../utils/error';
 
@@ -53,10 +53,19 @@ export const $profilesRouter = express.Router()
  *           application/json:
  *             schema:
  *               type: object
+ *               required:
+ *                 - error
+ *                 - code
+ *                 - message
  *               properties:
  *                 error:
  *                   type: string
  *                   example: "Invalid player name format"
+ *                 code:
+ *                   type: string
+ *                   enum:
+ *                     - INVALID_PLAYER_NAME
+ *                   example: INVALID_PLAYER_NAME
  *                 message:
  *                   type: string
  *                   example: "Player name must only contain alphanumeric characters and underscores"
@@ -66,10 +75,19 @@ export const $profilesRouter = express.Router()
  *           application/json:
  *             schema:
  *               type: object
+ *               required:
+ *                 - error
+ *                 - code
+ *                 - message
  *               properties:
  *                 error:
  *                   type: string
  *                   example: "Player not found"
+ *                 code:
+ *                   type: string
+ *                   enum:
+ *                     - PLAYER_NOT_FOUND
+ *                   example: PLAYER_NOT_FOUND
  *                 message:
  *                   type: string
  *                   example: "Could not resolve player UUID"
@@ -79,10 +97,19 @@ export const $profilesRouter = express.Router()
  *           application/json:
  *             schema:
  *               type: object
+ *               required:
+ *                 - error
+ *                 - code
+ *                 - message
  *               properties:
  *                 error:
  *                   type: string
  *                   example: "Data from Hypixel API did not match expected schema"
+ *                 code:
+ *                   type: string
+ *                   enum:
+ *                     - MALFORMED_DATA_FORMAT
+ *                   example: MALFORMED_DATA_FORMAT
  *                 message:
  *                   type: string
  *                   example: "Invalid enum value"
@@ -92,10 +119,19 @@ export const $profilesRouter = express.Router()
  *           application/json:
  *             schema:
  *               type: object
+ *               required:
+ *                 - error
+ *                 - code
+ *                 - message
  *               properties:
  *                 error:
  *                   type: string
  *                   example: "Failed to fetch data from Hypixel API"
+ *                 code:
+ *                   type: string
+ *                   enum:
+ *                     - HYPIXEL_API_ERROR
+ *                   example: HYPIXEL_API_ERROR
  *                 message:
  *                   type: object
  *                   properties:
@@ -111,10 +147,19 @@ export const $profilesRouter = express.Router()
  *           application/json:
  *             schema:
  *               type: object
+ *               required:
+ *                 - error
+ *                 - code
+ *                 - message
  *               properties:
  *                 error:
  *                   type: string
  *                   example: "Internal error"
+ *                 code:
+ *                   type: string
+ *                   enum:
+ *                     - INTERNAL_ERROR
+ *                   example: INTERNAL_ERROR
  *                 message:
  *                   type: string
  *                   example: "Database connection failed"
@@ -130,6 +175,7 @@ $profilesRouter.get('/:name', async (req: Req, res: Res) => {
     if (e instanceof HypixelApiError) {
       res.status(503).json({
         error: 'Failed to fetch data from Hypixel API',
+        code: ErrorCode.HYPIXEL_API_ERROR,
         message: {
           hypixelStatus: e.responseCode,
           hypixelMessage: e.responseCause
@@ -138,16 +184,19 @@ $profilesRouter.get('/:name', async (req: Req, res: Res) => {
     } else if (e instanceof ZodValidationError) {
       res.status(422).json({
         error: 'Data from Hypixel API did not match expected schema',
+        code: ErrorCode.MALFORMED_DATA_FORMAT,
         message: e.message
       })
     } else if (e instanceof DatabaseReadError) {
       res.status(500).json({
         error: 'Internal error',
+        code: ErrorCode.INTERNAL_ERROR,
         message: e.message
       })
     } else if (e instanceof MojangNotFoundError) {
       res.status(404).json({
         error: 'Player not found',
+        code: ErrorCode.PLAYER_NOT_FOUND,
         message: e.message
       })
     }
