@@ -3,7 +3,9 @@ import log4js from 'log4js'
 log4js.configure({
   appenders: {
     console: {type: 'stdout'},
-    app: {type: 'file', filename: 'logs/app.log'}
+    app: {
+      type: 'stdout'
+    }
   },
   categories: {
     default: {appenders: ['console', 'app'], level: 'debug'}
