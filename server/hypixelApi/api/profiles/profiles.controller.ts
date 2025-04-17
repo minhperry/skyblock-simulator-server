@@ -132,7 +132,7 @@ $profilesRouter.get('/:name', async (req: Req, res: Res) => {
         error: 'Failed to fetch data from Hypixel API',
         message: {
           hypixelStatus: e.responseCode,
-          hypixelMessage: e.message
+          hypixelMessage: e.responseCause
         }
       })
     } else if (e instanceof ZodValidationError) {
