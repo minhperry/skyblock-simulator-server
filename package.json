@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "server": "tsx app.ts"
+    "server": "tsx app.ts",
+    "dev": "tsx --watch app.ts"
   },
   "keywords": [],
   "author": "",
