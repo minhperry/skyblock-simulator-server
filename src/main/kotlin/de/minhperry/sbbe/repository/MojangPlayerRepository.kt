@@ -8,6 +8,4 @@ import java.util.UUID
 
 interface MojangPlayerRepository : JpaRepository<MojangPlayer, UUID> {
     fun findByName(name: String): Optional<MojangPlayer>
-
-    fun existsByName(name: String): Boolean
 }
