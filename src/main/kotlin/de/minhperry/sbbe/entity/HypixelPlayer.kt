@@ -27,7 +27,7 @@ class HypixelPlayer(
         nullable = false,
         unique = true
     )
-    val player: MojangPlayer,
+    val mojangPlayer: MojangPlayer,
 
     @OneToMany(
         mappedBy = "hypixelPlayer",
@@ -36,4 +36,4 @@ class HypixelPlayer(
     )
     val profiles: MutableList<Profile> = mutableListOf(),
 
-) : Serializable
+)

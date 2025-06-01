@@ -19,8 +19,7 @@ class MojangPlayer(
     @Size(max = 16, message = "Minecraft name can only contain at most 16 chars")
     val name: String,
 
-    @Id()
-    @Column(nullable = false, name = "player_uuid")
+    @Id
     val uuid: UUID,
 
     @OneToOne(

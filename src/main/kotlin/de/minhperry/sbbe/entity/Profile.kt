@@ -27,10 +27,17 @@ class Profile(
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "hypixel_player_id", nullable = false)
-    var player: HypixelPlayer,
+    var hypixelPlayer: HypixelPlayer,
 ) {
     override fun toString(): String {
-        return "Profile(uuid=$profileUuid, fruit=$profileFruit, gamemode=$gamemode, player=${player.player.uuid})"
+        return """
+            Profile(
+                uuid=$profileUuid, 
+                fruit=$profileFruit, 
+                gamemode=$gamemode, 
+                player=${hypixelPlayer.mojangPlayer.name}
+            )
+        """.trimIndent()
     }
 
     fun asDTO(): ProfileDTO {
