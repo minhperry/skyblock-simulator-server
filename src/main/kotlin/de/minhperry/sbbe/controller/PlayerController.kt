@@ -32,4 +32,15 @@ class PlayerController (
             throw PlayerNotFoundException(asUuid)
         }
     }
+
+    @GetMapping("/name/{name}")
+    fun getPlayerByName(@PathVariable("name") name: String): ResponseEntity<MojangPlayerDTO> {
+        val player = mojangService.findByName(name)
+
+        return if (player != null) {
+            ResponseEntity.ok(player.asDTO())
+        } else {
+            throw PlayerNotFoundException(name)
+        }
+    }
 }
