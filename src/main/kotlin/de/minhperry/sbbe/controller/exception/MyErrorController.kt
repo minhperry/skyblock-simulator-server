@@ -7,9 +7,9 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-class MyErrorController : ErrorController {
+class MyErrorController {
 
-    @RequestMapping("/error")
+    @RequestMapping("/errdor")
     fun handleError(): ResponseEntity<ErrorResponse> {
         val error = ErrorResponse(
             message = "Route does not exist",
