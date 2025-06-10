@@ -2,11 +2,14 @@ package de.minhperry.sbbe.service
 
 import de.minhperry.sbbe.entity.MojangPlayer
 import de.minhperry.sbbe.repository.MojangPlayerRepository
+import de.minhperry.sbbe.utils.UUIDUtils
+import de.minhperry.sbbe.utils.UUIDUtils.toDashedUuidString
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
+import java.time.Duration
+import java.time.Instant
 import java.util.UUID
 
 @Service
@@ -16,20 +19,45 @@ class MojangService(
     private val restTemplate = RestTemplate()
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    fun findByUuid(uuid: UUID): MojangPlayer? =
-        mojangPlayerRepository.findById(uuid).orElse(null)
+    private val NEGATIVE_CACHE_DURATION = Duration.ofMinutes(60)
 
-    fun findByName(name: String): MojangPlayer? =
-        mojangPlayerRepository.findByName(name.lowercase()).orElse(null)
+    fun findByUuid(uuid: UUID): MojangPlayer? =
+        mojangPlayerRepository.findById(uuid).orElse(saveByUuid(uuid))
+
+    fun findPlayerByName(name: String): MojangPlayer? {
+        val lowercaseName = name.lowercase()
+        val existingPlayer = mojangPlayerRepository.findByName(lowercaseName)
+
+        return if (existingPlayer.isPresent) {
+            val player = existingPlayer.get()
+            // If player exists or cache hasn't expired, return the player
+            if (
+                player.playerExists ||
+                Duration.between(player.lastModified, Instant.now()) > NEGATIVE_CACHE_DURATION
+            ) {
+                player
+            } else {
+                // Cache expired, try to save again
+                saveByName(lowercaseName)
+            }
+        } else {
+            // Player not found, try to save by name
+            saveByName(lowercaseName)
+        }
+    }
 
     fun saveByName(name: String): MojangPlayer? {
         val url = "https://api.minecraftservices.com/minecraft/profile/lookup/name/$name"
         return try {
             val resp = restTemplate.getForObject(url, MojangSuccessResponse::class.java)
             if (resp != null) {
-                val uuid = UUID.fromString(resp.id)
+                val uuid = UUID.fromString(resp.id.toDashedUuidString())
                 // Save in database as lowercase name
-                val player = MojangPlayer(name.lowercase(), uuid)
+                val player = MojangPlayer(
+                    name.lowercase(),
+                    uuid = uuid,
+                    playerExists = true
+                )
                 mojangPlayerRepository.save(player)
             } else {
                 logger.error("Received null response from Mojang API for player name '$name'")
@@ -37,6 +65,13 @@ class MojangService(
             }
         } catch (e: HttpClientErrorException.NotFound) {
             logger.error("Player with name '$name' not found in Mojang API", e)
+            mojangPlayerRepository.save(
+                MojangPlayer(
+                    name.lowercase(),
+                    uuid = UUIDUtils.ZERO,
+                    playerExists = false
+                )
+            )
             null
         }
     }
