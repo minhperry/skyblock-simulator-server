@@ -24,7 +24,7 @@ class PlayerController (
             throw MalformedUUIDException(uuid)
         }
 
-        val player = mojangService.findByUuid(asUuid)
+        val player = mojangService.findPlayerByUuid(asUuid)
 
         return if (player != null) {
             ResponseEntity.ok(player.asDTO())

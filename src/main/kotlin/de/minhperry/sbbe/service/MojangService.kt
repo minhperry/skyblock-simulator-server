@@ -21,8 +21,8 @@ class MojangService(
 
     private val NEGATIVE_CACHE_DURATION = Duration.ofMinutes(60)
 
-    fun findByUuid(uuid: UUID): MojangPlayer? =
-        mojangPlayerRepository.findById(uuid).orElse(saveByUuid(uuid))
+    fun findPlayerByUuid(uuid: UUID): MojangPlayer? =
+        mojangPlayerRepository.findByUuid(uuid).orElseGet { saveByUuid(uuid) }
 
     fun findPlayerByName(name: String): MojangPlayer? {
         val lowercaseName = name.lowercase()

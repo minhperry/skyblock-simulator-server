@@ -8,4 +8,5 @@ import java.util.UUID
 
 interface MojangPlayerRepository : JpaRepository<MojangPlayer, UUID> {
     fun findByName(name: String): Optional<MojangPlayer>
+    fun findByUuid(uuid: UUID): Optional<MojangPlayer>
 }
