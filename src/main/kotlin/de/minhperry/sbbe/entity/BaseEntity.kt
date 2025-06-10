@@ -6,14 +6,13 @@ import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
 import java.io.Serializable
 import java.util.Objects
-import java.util.UUID
 
 @MappedSuperclass
 class BaseEntity(
     @Id
     @GeneratedValue
     @Column(nullable = false, updatable = false)
-    private val id: UUID? = null
+    private val id: Long? = null
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
