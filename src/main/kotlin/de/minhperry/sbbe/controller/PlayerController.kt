@@ -35,7 +35,7 @@ class PlayerController (
 
     @GetMapping("/name/{name}")
     fun getPlayerByName(@PathVariable("name") name: String): ResponseEntity<MojangPlayerDTO> {
-        val player = mojangService.findByName(name)
+        val player = mojangService.findPlayerByName(name)
 
         return if (player != null) {
             ResponseEntity.ok(player.asDTO())
