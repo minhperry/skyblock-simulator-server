@@ -4,6 +4,8 @@ import de.minhperry.sbbe.entity.dto.MojangPlayerDTO
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Table
 import jakarta.persistence.Id
 import jakarta.persistence.OneToOne
@@ -19,7 +21,7 @@ class MojangPlayer(
     @Size(max = 16, message = "Minecraft name can only contain at most 16 chars")
     val name: String,
 
-    @Id
+    @Column(name = "player_uuid", nullable = false, unique = true)
     val uuid: UUID,
 
     @OneToOne(
@@ -28,8 +30,8 @@ class MojangPlayer(
         orphanRemoval = true,
         optional = false
     )
-    val hypixelPlayer: HypixelPlayer? = null
-) {
+    val hypixelPlayer: HypixelPlayer? = null,
+) : BaseEntity() {
     fun asDTO(): MojangPlayerDTO {
         return MojangPlayerDTO(this.uuid, this.name)
     }

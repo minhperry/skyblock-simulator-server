@@ -17,7 +17,6 @@ import java.util.UUID
     name = "profile",
 )
 class Profile(
-    @Id
     val profileUuid: UUID,
 
     val profileFruit: String,
@@ -28,7 +27,7 @@ class Profile(
     @ManyToOne(optional = false)
     @JoinColumn(name = "hypixel_player_id", nullable = false)
     var hypixelPlayer: HypixelPlayer,
-) {
+) : BaseEntity() {
     override fun toString(): String {
         return """
             Profile(

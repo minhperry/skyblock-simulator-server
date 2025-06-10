@@ -16,14 +16,10 @@ import java.io.Serializable
     name = "hypixel_player",
 )
 class HypixelPlayer(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
-
     @OneToOne(optional = false)
     @JoinColumn(
         name = "mojang_uuid",
-        referencedColumnName = "uuid",
+        referencedColumnName = "id",
         nullable = false,
         unique = true
     )
@@ -35,5 +31,4 @@ class HypixelPlayer(
         orphanRemoval = true
     )
     val profiles: MutableList<Profile> = mutableListOf(),
-
-)
+) : BaseEntity()
