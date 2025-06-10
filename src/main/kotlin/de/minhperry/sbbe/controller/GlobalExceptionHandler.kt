@@ -1,5 +1,11 @@
-package de.minhperry.sbbe.controller.exception
+package de.minhperry.sbbe.controller
 
+import de.minhperry.sbbe.controller.exception.ErrorResponse
+import de.minhperry.sbbe.controller.exception.IllegalPlayerNameException
+import de.minhperry.sbbe.controller.exception.InternalErrorException
+import de.minhperry.sbbe.controller.exception.MalformedUUIDException
+import de.minhperry.sbbe.controller.exception.PlayerNotFoundException
+import de.minhperry.sbbe.controller.exception.ResponseLabel
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
