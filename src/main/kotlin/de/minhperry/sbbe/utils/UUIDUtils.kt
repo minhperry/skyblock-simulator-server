@@ -1,5 +1,7 @@
 package de.minhperry.sbbe.utils
 
+import java.util.UUID
+
 object UUIDUtils {
     fun String.toDashedUuidString(): String {
         val uuid = this
@@ -19,4 +21,7 @@ object UUIDUtils {
     fun String.toUndashedUuidString(): String {
         return this.replace("-", "")
     }
+
+    @JvmStatic
+    val ZERO = UUID.fromString("0000000-0000-0000-0000-000000000000")
 }
